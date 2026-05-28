@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Repositorio · Redes & TICs | Taller de Proyectos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    /* ── RESET & VARIABLES ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #07090f;
+      --surface: #0e1220;
+      --surface2: #161c2e;
+      --border: #1e2640;
+      --accent: #3b82f6;
+      --accent2: #06b6d4;
+      --accent3: #8b5cf6;
+      --green: #10b981;
+      --orange: #f59e0b;
+      --red: #ef4444;
+      --text: #e8eaf0;
+      --muted: #6b7a9e;
+      --glow: rgba(59,130,246,0.15);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0; opacity: 0.4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem;
+      height: 62px;
+      background: rgba(7,9,15,0.85);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .nav-logo-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none;
+      font-size: 0.85rem; font-weight: 500;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      align-items: center;        /* ← agrega esto */
+      text-align: center; 
+      padding: 7rem 4rem 4rem;
+      overflow: hidden;
+    }
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(59,130,246,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59,130,246,0.05) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+    }
+    .hero-glow {
+      position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
+      width: 900px; height: 600px;
+      background: radial-gradient(ellipse, rgba(59,130,246,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 100px; padding: 6px 14px;
+      font-size: 0.78rem; color: var(--muted);
+      margin-bottom: 2rem; width: fit-content;
+      letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .hero-tag span { color: var(--accent2); }
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      max-width: 760px;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      max-width: 520px;
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin-bottom: 3rem;
+      line-height: 1.7;
+    }
+    .hero-stats {
+      display: flex; gap: 3rem;
+      flex-wrap: wrap;
+    }
+    .hero-stat { display: flex; flex-direction: column; gap: 2px; }
+    .hero-stat-n {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.2rem; font-weight: 800;
+      background: linear-gradient(135deg, var(--text), var(--muted));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero-stat-label { font-size: 0.8rem; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; }
+
+    /* ── SECTIONS ── */
+    section { position: relative; z-index: 1; }
+    .section-inner { max-width: 1280px; margin: 0 auto; padding: 6rem 2rem; }
+    .section-label {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent2);
+      margin-bottom: 0.6rem;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 800; letter-spacing: -0.02em;
+      margin-bottom: 0.8rem;
+    }
+    .section-desc { color: var(--muted); max-width: 560px; line-height: 1.7; margin-bottom: 3rem; }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      margin-bottom: 2.5rem;
+    }
+    .filter-btn {
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--muted); border-radius: 100px;
+      padding: 7px 18px; font-size: 0.82rem; font-weight: 500;
+      cursor: pointer; transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .filter-btn:hover { border-color: var(--accent); color: var(--text); }
+    .filter-btn.active {
+      background: var(--accent); border-color: var(--accent);
+      color: #fff; box-shadow: 0 0 16px rgba(59,130,246,0.3);
+    }
+
+    /* ── THESIS GRID ── */
+    .thesis-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.5rem;
+    }
+    .thesis-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.25s;
+      cursor: pointer;
+      position: relative;
+    }
+    .thesis-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 2px;
+      opacity: 0; transition: opacity 0.25s;
+    }
+    .thesis-card:hover { border-color: rgba(59,130,246,0.4); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+    .thesis-card:hover::before { opacity: 1; }
+    .card-accent-umsa::before { background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+    .card-accent-ext::before { background: linear-gradient(90deg, var(--accent3), #ec4899); }
+
+    .card-header {
+      padding: 1.4rem 1.4rem 0;
+      display: flex; justify-content: space-between; align-items: flex-start;
+    }
+    .card-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+    .badge {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.05em;
+      padding: 3px 10px; border-radius: 100px;
+      text-transform: uppercase;
+    }
+    .badge-umsa { background: rgba(59,130,246,0.12); color: var(--accent); border: 1px solid rgba(59,130,246,0.2); }
+    .badge-ext { background: rgba(139,92,246,0.12); color: var(--accent3); border: 1px solid rgba(139,92,246,0.2); }
+    .badge-year { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+    .card-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.75rem; font-weight: 700;
+      color: var(--border); letter-spacing: 0.1em;
+    }
+
+    .card-body { padding: 1rem 1.4rem; }
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.97rem; font-weight: 700;
+      line-height: 1.4; margin-bottom: 0.4rem;
+      color: var(--text);
+    }
+    .card-author { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.8rem; }
+    .card-domain {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.78rem; color: var(--accent2);
+      background: rgba(6,182,212,0.08); border: 1px solid rgba(6,182,212,0.15);
+      border-radius: 6px; padding: 4px 10px;
+      margin-bottom: 0.8rem;
+    }
+
+    .card-meta {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+      padding: 1rem 1.4rem;
+      border-top: 1px solid var(--border);
+      background: rgba(0,0,0,0.2);
+    }
+    .meta-item { display: flex; flex-direction: column; gap: 1px; }
+    .meta-label { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .meta-val { font-size: 0.8rem; color: var(--text); font-weight: 500; }
+
+    .card-footer {
+      padding: 0.9rem 1.4rem;
+      display: flex; gap: 8px;
+    }
+    .btn-detail, .btn-download {
+      flex: 1; padding: 9px; border-radius: 8px;
+      font-size: 0.8rem; font-weight: 600;
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+    }
+    .btn-detail {
+      background: var(--surface2); color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-detail:hover { background: var(--border); }
+    .btn-download {
+      background: var(--accent); color: #fff;
+      box-shadow: 0 4px 12px rgba(59,130,246,0.25);
+    }
+    .btn-download:hover { background: #2563eb; box-shadow: 0 4px 18px rgba(59,130,246,0.4); }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 1.5rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      width: 100%; max-width: 680px;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: translateY(20px);
+      transition: transform 0.25s;
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal-top {
+      padding: 2rem 2rem 0;
+      position: sticky; top: 0;
+      background: var(--surface);
+      display: flex; justify-content: space-between; align-items: flex-start;
+    }
+    .modal-close {
+      background: var(--surface2); border: 1px solid var(--border);
+      color: var(--muted); width: 36px; height: 36px;
+      border-radius: 50%; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; transition: all 0.2s; flex-shrink: 0;
+    }
+    .modal-close:hover { color: var(--text); background: var(--border); }
+    .modal-body { padding: 1.5rem 2rem 2rem; }
+    .modal-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.3rem; font-weight: 800;
+      line-height: 1.3; margin-bottom: 0.4rem;
+    }
+    .modal-author { color: var(--muted); margin-bottom: 1.5rem; }
+    .modal-section-title {
+      font-size: 0.72rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--accent2); margin-bottom: 0.5rem; margin-top: 1.4rem;
+    }
+    .modal-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .modal-field {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 0.9rem;
+    }
+    .modal-field-label {
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.07em;
+      color: var(--muted); margin-bottom: 4px;
+    }
+    .modal-field-val { font-size: 0.88rem; color: var(--text); font-weight: 500; }
+    .modal-abstract {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.1rem;
+      font-size: 0.88rem; color: var(--muted);
+      line-height: 1.7;
+    }
+    .modal-tools {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 0.6rem;
+    }
+    .tool-chip {
+      background: rgba(6,182,212,0.08); border: 1px solid rgba(6,182,212,0.2);
+      color: var(--accent2); border-radius: 6px;
+      padding: 4px 12px; font-size: 0.78rem;
+    }
+    .modal-btns {
+      display: flex; gap: 10px; margin-top: 1.8rem;
+    }
+    .modal-btn-dl {
+      flex: 1; padding: 12px;
+      background: var(--accent); color: #fff;
+      border: none; border-radius: 10px;
+      font-size: 0.9rem; font-weight: 600;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      gap: 8px; transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+      box-shadow: 0 4px 14px rgba(59,130,246,0.3);
+    }
+    .modal-btn-dl:hover { background: #2563eb; }
+    .modal-btn-repo {
+      padding: 12px 20px;
+      background: var(--surface2); color: var(--text);
+      border: 1px solid var(--border); border-radius: 10px;
+      font-size: 0.9rem; font-weight: 600;
+      cursor: pointer; display: flex; align-items: center;
+      gap: 8px; transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+    }
+    .modal-btn-repo:hover { background: var(--border); }
+
+    /* ── MATRIX ── */
+    #matriz { background: linear-gradient(180deg, transparent, rgba(59,130,246,0.03), transparent); }
+    .matrix-wrapper {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--surface);
+    }
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+    thead th {
+      background: var(--surface2);
+      padding: 14px 16px;
+      text-align: left;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(59,130,246,0.04); }
+    td {
+      padding: 12px 16px;
+      vertical-align: top;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    td:first-child { min-width: 240px; }
+    .td-title { font-weight: 600; font-size: 0.83rem; color: var(--text); }
+    .td-author { font-size: 0.76rem; color: var(--muted); }
+    .osi-chip {
+      display: inline-block;
+      background: rgba(16,185,129,0.1);
+      border: 1px solid rgba(16,185,129,0.2);
+      color: var(--green);
+      border-radius: 6px; padding: 2px 8px;
+      font-size: 0.73rem; font-weight: 600;
+      white-space: nowrap;
+    }
+    .domain-chip {
+      display: inline-block;
+      background: rgba(139,92,246,0.1);
+      border: 1px solid rgba(139,92,246,0.2);
+      color: var(--accent3);
+      border-radius: 6px; padding: 2px 8px;
+      font-size: 0.73rem; white-space: nowrap;
+    }
+
+    /* ── REPORTE ── */
+    #reporte { }
+    .report-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem; margin-bottom: 3rem;
+    }
+    .report-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 1.8rem;
+      position: relative; overflow: hidden;
+    }
+    .report-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    }
+    .rc-density::before { background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+    .rc-obsolescence::before { background: linear-gradient(90deg, var(--orange), #ef4444); }
+    .rc-gap::before { background: linear-gradient(90deg, var(--green), var(--accent2)); }
+    .rc-proposal::before { background: linear-gradient(90deg, var(--accent3), #ec4899); }
+
+    .report-icon {
+      width: 42px; height: 42px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; margin-bottom: 1rem;
+    }
+    .ri-density { background: rgba(59,130,246,0.1); }
+    .ri-obsolescence { background: rgba(245,158,11,0.1); }
+    .ri-gap { background: rgba(16,185,129,0.1); }
+    .ri-proposal { background: rgba(139,92,246,0.1); }
+
+    .report-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem; font-weight: 700;
+      margin-bottom: 0.7rem;
+    }
+    .report-card p { font-size: 0.87rem; color: var(--muted); line-height: 1.7; }
+
+    /* Chart bar */
+    .density-chart { margin-top: 1rem; }
+    .bar-row { margin-bottom: 8px; }
+    .bar-label { font-size: 0.75rem; color: var(--muted); margin-bottom: 3px; display: flex; justify-content: space-between; }
+    .bar-track { height: 6px; background: var(--surface2); border-radius: 10px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 10px; transition: width 1s ease; }
+
+    /* Proposals */
+    .proposal-list { list-style: none; margin-top: 1rem; }
+    .proposal-list li {
+      display: flex; gap: 10px; align-items: flex-start;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+    }
+    .proposal-list li:last-child { border-bottom: none; }
+    .proposal-num {
+      font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 800;
+      color: var(--accent3); flex-shrink: 0; width: 22px;
+    }
+    .proposal-text { font-size: 0.84rem; color: var(--text); line-height: 1.5; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+    footer strong { color: var(--text); }
+
+    /* ── HIDDEN ── */
+    .hidden { display: none !important; }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+    @media (max-width: 640px) {
+      .hero { padding: 6rem 1.5rem 3rem; }
+      .section-inner { padding: 4rem 1.2rem; }
+      .modal-grid { grid-template-columns: 1fr; }
+      .hero-stats { gap: 2rem; }
+      .modal-btns { flex-direction: column; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-dot"></div>
+    Repositorio Redes & TICs
+  </div>
+  <ul class="nav-links">
+    <li><a href="#tesis">Tesis</a></li>
+    <li><a href="#matriz">Matriz</a></li>
+    <li><a href="#reporte">Reporte</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-tag">
+     <span>Taller de Técnico Superior </span> · Redes y TICs ·
+  </div>
+  <h1>Análisis de Brechas y <em>Tendencias</em> en Redes & TICs</h1>
+  <p class="hero-sub">
+    Repositorio de 12 proyectos académicos que mapean el estado actual, 
+    las tecnologías saturadas y las oportunidades de investigación en la carrera.
+  </p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="hero-stat-n">12</span>
+      <span class="hero-stat-label">Tesis <br> recopiladas </span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-n">6</span>
+      <span class="hero-stat-label">UMSA</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-n">6</span>
+      <span class="hero-stat-label">Otras <br> instituciones</span>
+    </div>
+  </div>
+</section>
+
+<!-- TESIS -->
+<section id="tesis">
+  <div class="section-inner">
+    <div class="section-label">Componente "A"</div>
+    <h2 class="section-title">Catálogo de Tesis</h2>
+    <p class="section-desc">Explora cada proyecto de grado. Haz clic en "Ver detalles" para leer el análisis completo o descarga la tesis directamente.</p>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterCards('all', this)">Todos</button>
+      <button class="filter-btn" onclick="filterCards('umsa', this)">UMSA</button>
+      <button class="filter-btn" onclick="filterCards('ext', this)">Otras instituciones</button>
+      <button class="filter-btn" onclick="filterCards('seguridad', this)">Seguridad</button>
+      <button class="filter-btn" onclick="filterCards('sdn', this)">SDN / Cloud</button>
+      <button class="filter-btn" onclick="filterCards('iot', this)">IoT</button>
+      <button class="filter-btn" onclick="filterCards('gestion', this)">Gestión / Monitoreo</button>
+    </div>
+
+    <div class="thesis-grid" id="thesis-grid">
+      <!-- Cards generadas por JS -->
+    </div>
+  </div>
+</section>
+
+<!-- MATRIZ -->
+<section id="matriz">
+  <div class="section-inner">
+    <div class="section-label">Componente A · Vista Tabla</div>
+    <h2 class="section-title">Matriz Técnica</h2>
+    <p class="section-desc">Clasificación técnica completa según dominio tecnológico, capa del modelo OSI/TCP-IP y entorno de validación.</p>
+    <div class="matrix-wrapper">
+      <table id="matrix-table">
+        <thead>
+          <tr>
+            <th>N°</th>
+            <th>Título · Autor · Año</th>
+            <th>Institución</th>
+            <th>Dominio Tecnológico</th>
+            <th>Capa OSI / TCP-IP</th>
+            <th>Herramientas de Validación</th>
+          </tr>
+        </thead>
+        <tbody id="matrix-body"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- REPORTE -->
+<section id="reporte">
+  <div class="section-inner">
+    <div class="section-label">Componente B</div>
+    <h2 class="section-title">Reporte Analítico de Brechas</h2>
+    <p class="section-desc">Análisis crítico de las áreas saturadas, tecnologías obsoletas, brechas identificadas y propuestas de investigación.</p>
+
+    <div class="report-grid">
+      <!-- Densidad -->
+      <div class="report-card rc-density">
+        <h3>Mapeo de Densidad</h3>
+        <p>Las subáreas más exploradas en los repositorios analizados durante 2020–2026.</p>
+        <div class="density-chart" id="density-chart"></div>
+      </div>
+
+      <!-- Obsolescencia -->
+      <div class="report-card rc-obsolescence">
+        <h3>Evaluación de Obsolescencia</h3>
+        <p id="obsolescence-text">Cargando análisis...</p>
+      </div>
+
+      <!-- Brecha -->
+      <div class="report-card rc-gap">
+        <h3>Identificación de la Brecha</h3>
+        <p id="gap-text">Cargando brechas...</p>
+      </div>
+
+      <!-- Propuesta -->
+      <div class="report-card rc-proposal">
+        <h3>Propuesta de Línea de Investigación</h3>
+        <ul class="proposal-list" id="proposal-list"></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <strong>Taller de Técnico superior · Mención Redes y TICs</strong><br>
+  Periodo de análisis: 2020–2026 · 12 tesis revisadas<br><br>
+  <span style="color:var(--border)">Periodo de análisis: 2020–2026 · 12 tesis revisadas<br><br></span>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal" id="modal-content">
+    <div class="modal-top">
+      <div class="card-badges" id="modal-badges"></div>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body">
+      <h2 class="modal-title" id="modal-title"></h2>
+      <p class="modal-author" id="modal-author"></p>
+      <div class="modal-grid" id="modal-fields"></div>
+      <div class="modal-section-title">Resumen / Abstract</div>
+      <div class="modal-abstract" id="modal-abstract"></div>
+      <div class="modal-section-title">Herramientas utilizadas</div>
+      <div class="modal-tools" id="modal-tools"></div>
+      <div class="modal-btns">
+        <button class="modal-btn-dl" id="modal-dl-btn">⬇ Descargar Tesis (PDF)</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════
+   DATOS DE LAS TESIS
+   ▶ REEMPLAZA cada objeto con la info real de tu tesis
+   ══════════════════════════════════════════════════════ */
+const TESIS = [
+  /* ─── UMSA ─── */
+  {
+  id: 1,
+  tipo: "umsa",
+  titulo: "PROTOTIPO DE MEDIDOR DE AGUA IOT PARA EL CONTROL Y MONITOREO DEL CONSUMO DE AGUA POTABLE EN HOGARES DE LA CIUDAD DE LA PAZ",
+  autor: "JESUS JUAN CARLOS MARAZA VIGABRIEL",
+  anio: 2021,
+  institucion: "UMSA – Facultad de Ciencias Puras y Naturales - Carrera de Informática",
+  dominio: "Internet de las Cosas (IoT), Sistemas Embebidos, Domótica",
+  tags: ["iot"],
+  capaOSI: "Capa 1 – Física (Sensores), Capa 7 – Aplicación (App Blynk y protocolo Blynk)",
+  herramientas: [
+    "Plataforma ESP32",
+    "PlatformIO",
+    "Lenguaje C++ (basado en C y Processing)",
+    "Blynk.cc (Framework IoT)",
+    "Sensor de flujo YF-S201",
+    "Sensor de voltaje FZ0430",
+    "Pantalla LCD 16x2 I2C",
+    "Tarjeta SD",
+    "WiFi 802.11 b/g/n",
+    "Metodología de Desarrollo en V"
+  ],
+  repositorio: "https://repositorio.umsa.bo",
+  pdf: "tesis/tesis umsa/tesis-01.pdf",
+  resumen: "Desarrolla un prototipo de medidor de agua IoT para empoderar al usuario final en el control y monitoreo de su consumo de agua potable. El sistema utiliza un microcontrolador ESP32 con conectividad WiFi, un sensor de flujo YF-S201 para medir el consumo en litros, y un sensor de voltaje FZ0430 para monitorear la batería. Los datos se visualizan en una interfaz móvil creada con la plataforma Blynk y se almacenan localmente en una tarjeta SD ante la falta de conexión a Internet. El prototipo cumple con la normativa boliviana (Clase de Exactitud 2) y permite calcular el costo del consumo en tiempo real.",
+  fuente: "Repositorio UMSA – Tesis de Grado"
+},
+  {
+  id: 2,
+  tipo: "umsa",
+  titulo: "DISEÑO Y SIMULACIÓN DE UNA ARQUITECTURA DE RED DEFINIDA POR SOFTWARE EN BASE AL PROTOCOLO OPENFLOW",
+  autor: "GUSTAVO CORONEL FLORES",
+  anio: 2019,
+  institucion: "UMSA – Facultad de Ingeniería - Carrera Ingeniería Electrónica",
+  dominio: "Redes Definidas por Software (SDN), Protocolo OpenFlow, Telecomunicaciones",
+  tags: ["sdn", "openflow", "redes", "mininet", "ryu"],
+  capaOSI: "Capa 2 – Enlace de Datos (OpenFlow, STP, MAC), Capa 3 – Red (OpenFlow), Capa 7 – Aplicación (APIs del controlador Ryu)",
+  herramientas: [
+    "Ubuntu 16.04 LTS",
+    "Mininet 2.2.2",
+    "Controlador Ryu",
+    "Protocolo OpenFlow 1.3",
+    "Open vSwitch",
+    "Wireshark 2.2.6",
+    "Python 2.7",
+    "Git",
+    "STP IEEE 802.1D"
+  ],
+  repositorio: "https://repositorio.umsa.bo",
+  pdf: "tesis/tesis umsa/tesis-02.pdf",
+  resumen: "Diseña y simula una arquitectura de red definida por software (SDN) utilizando el protocolo OpenFlow para superar las limitaciones de las redes tradicionales. La implementación virtual se realizó con software libre (Ubuntu, Mininet, controlador Ryu) emulando una topología de 5 switches con enlaces redundantes. Se desarrolló una aplicación en Python que implementa el Protocolo de Árbol de Expansión (STP) para gestionar bucles de capa 2 de forma centralizada. Se verificó el establecimiento del canal OpenFlow con Wireshark y se evaluaron los tiempos de respuesta en tres escenarios, demostrando la automatización y eficiencia de la arquitectura SDN.",
+  fuente: "Repositorio UMSA – Proyecto de Grado"
+
+  },
+  {
+  id: 3,
+  tipo: "umsa",
+  titulo: "ESTUDIO DE UNA RED (SDN) CON EL PROTOCOLO OPENFLOW Y EL CONTROLADOR RYU",
+  autor: "ELIZABETH VINO DURAN",
+  anio: 2019,
+  institucion: "UMSA – Facultad de Ingeniería - Carrera Ingeniería Electrónica",
+  dominio: "Redes Definidas por Software (SDN), Protocolo OpenFlow, Controlador Ryu, Calidad de Servicio (QoS)",
+  tags: ["sdn", "openflow", "ryu", "mininet", "qos", "redes"],
+  capaOSI: "Capa 2 – Enlace de Datos (Switching, MAC, VLAN), Capa 3 – Red (Routing, IP, DiffServ), Capa 4 – Transporte (TCP, UDP, QoS)",
+  herramientas: [
+    "Ubuntu 16.04",
+    "Mininet 2.2.2",
+    "Controlador Ryu",
+    "Protocolo OpenFlow 1.3",
+    "Open vSwitch",
+    "Wireshark",
+    "Python",
+    "VirtualBox",
+    "iperf",
+    "JSON/REST API",
+    "DiffServ (DSCP)",
+    "VLAN 802.1Q"
+  ],
+  repositorio: "https://repositorio.umsa.bo",
+  pdf: "tesis/tesis umsa/tesis-03.pdf",
+  resumen: "Estudia y desarrolla el entorno de redes definidas por software (SDN) utilizando el protocolo OpenFlow y el controlador Ryu. Se implementan cuatro casos prácticos: 1) configuración de una red simple en Mininet sin controlador, 2) integración del controlador Ryu con análisis detallado de mensajes OpenFlow (HELLO, FEATURES, PACKET_IN, PACKET_OUT, ECHO), 3) virtualización de la red del Instituto de Electrónica Aplicada (IEA) con VLANs y enrutamiento entre subredes, evaluando throughput TCP (23.6 Gbps promedio), UDP (0% pérdida) y jitter (0.035 ms), y 4) implementación de QoS mediante balanceo de carga por ancho de banda (colas con min_rate y max_rate) y DiffServ con marcado DSCP (AF31 y AF41). Se demuestra que SDN permite una gestión centralizada, programable y eficiente de la red, reduciendo costos operativos y de infraestructura.",
+  fuente: "Repositorio UMSA – Proyecto de Grado"
+  },
+  {
+  id: 4,
+  tipo: "umsa",
+  titulo: "DETECCIÓN DE MALWARE EN UNA RED CON MACHINE LEARNING",
+  autor: "FERNANDO ROGER CORNEJO TARQUI",
+  anio: 2020,
+  institucion: "UMSA – Facultad de Ciencias Puras y Naturales - Carrera de Informática",
+  dominio: "Seguridad Informática, Machine Learning, Detección de Malware, Ciberseguridad",
+  tags: ["seguridad", "machine learning", "malware", "deteccion de anomalias", "redes"],
+  capaOSI: "Capa 2 – Enlace de Datos (MAC, VLAN), Capa 3 – Red (IP, ARP), Capa 4 – Transporte (TCP, UDP), Capa 7 – Aplicación (HTTP, DNS, TLS)",
+  herramientas: [
+    "Python 3",
+    "Anaconda (Jupyter Notebook)",
+    "Scikit-learn",
+    "Wireshark",
+    "NetFlow",
+    "Port Mirroring (SPAN)",
+    "Covarianza Robusta (MCD)",
+    "SVM One-Class",
+    "Isolation Forest",
+    "Local Outlier Factor (LOF)",
+    "Matriz de Confusión",
+    "Curva ROC / AUC",
+    "CRISP-DM"
+  ],
+  repositorio: "https://repositorio.umsa.bo",
+  pdf: "tesis/tesis umsa/tesis-04.pdf",
+  resumen: "Plantea un modelo de detección automática de malware en una red utilizando técnicas de Machine Learning no supervisado para la detección de anomalías en el flujo de tráfico de red. Se implementó la metodología CRISP-DM para el procesamiento de datos, capturando tráfico real mediante Wireshark y NetFlow en una topología de red con Port Mirroring. Se evaluaron cuatro algoritmos de detección de anomalías: Covarianza Robusta (MCD), SVM One-Class, Isolation Forest y Local Outlier Factor (LOF). El modelo Isolation Forest obtuvo los mejores resultados con una precisión de evaluación del 98%, una exactitud del 85%, una especificidad del 99% y un AUC de 0.92 (92% de probabilidad de distinguir entre tráfico normal y malware), superando la hipótesis planteada del 90% de confiabilidad. Los modelos Robust Covariance y SVM One-Class mostraron un rendimiento pobre con exactitudes del 40%. La investigación demuestra que el aprendizaje automático no supervisado es efectivo para detectar malware desconocido (zero-day) basándose únicamente en patrones de flujo de red.",
+  fuente: "Repositorio UMSA – Tesis de Grado"
+  },
+  
+  {
+  id: 5,
+  tipo: "umsa",
+  titulo: "SISTEMA DE SEGURIDAD BASADO EN EL INTERNET DE LAS COSAS PARA VIVIENDAS URBANAS",
+  autor: "LIZETH CRUZ CACERES",
+  anio: 2020,
+  institucion: "UMSA – Facultad de Ciencias Puras y Naturales - Carrera de Informática",
+  dominio: "Internet de las Cosas (IoT), Domótica, Seguridad en el Hogar, Sistemas Embebidos",
+  tags: ["iot", "seguridad", "domotica", "hogar", "arduino"],
+  capaOSI: "Capa 1 – Física (Sensores, actuadores, cerco eléctrico), Capa 2 – Enlace de Datos (Ethernet), Capa 3 – Red (IP), Capa 7 – Aplicación (HTTP, Web)",
+  herramientas: [
+    "Arduino Uno",
+    "Shield Ethernet W5100",
+    "Sensor PIR (infrarrojo pasivo)",
+    "Cerco eléctrico (electrificador JFL320)",
+    "Cámaras de seguridad Dahua",
+    "Sirena de alarma",
+    "Focos LED",
+    "Módulo DC-DC LM2596",
+    "Router TP-Link",
+    "PHP 7.3.9",
+    "XAMPP 3.2.4",
+    "MySQL 4.9.0.1",
+    "Code Igniter 3.1.10 (Framework MVC)",
+    "Bootstrap 3.3.7",
+    "HTML/CSS/JavaScript",
+    "gDMSS Lite (app móvil)",
+    "Metodología en V"
+  ],
+  repositorio: "https://github.com/LizethCruz/Sistema_seguridad.git",
+  pdf: "tesis/tesis umsa/tesis-05.pdf",
+  resumen: "Desarrolla e implementa un sistema de seguridad para viviendas urbanas basado en Internet de las Cosas (IoT), integrando hardware y software para el resguardo del hogar. El sistema utiliza una placa Arduino Uno con Shield Ethernet para conectividad WiFi, un sensor PIR para detección de movimiento, un cerco eléctrico perimetral con electrificador, cámaras de seguridad Dahua, sirena de alarma y focos de iluminación. Se desarrolló una aplicación web con Code Igniter (PHP, MySQL, Bootstrap) que permite el monitoreo en tiempo real de las cámaras, la activación/desactivación remota del cerco eléctrico, focos y sirena, además del envío de alertas por correo electrónico ante detección de intrusos. El sistema fue implementado en una vivienda real en la Zona Tilata Jnas de La Paz, donde se levantó un punto WiFi propio. El cerco eléctrico (con alambre galvanizado y postes) actúa como barrera física disuasiva, activando la sirena automáticamente ante corte de cable. Las pruebas de calibración del sensor PIR mostraron tiempos de activación entre 48 y 67 segundos. La página web responde en aproximadamente 2 segundos en distancias cortas. El sistema cumple con los requerimientos básicos de seguridad para una vivienda, ofreciendo control remoto y protección activa contra intrusos.",
+  fuente: "Repositorio UMSA – Tesis de Grado"
+  },
+
+  {
+  id: 6,
+  tipo: "umsa",
+  titulo: "MODELO DE GESTIÓN Y CONTROL INTEGRAL DE RIESGOS DE SEGURIDAD DE LA INFORMACIÓN EN LA ADMINISTRACIÓN PÚBLICA",
+  autor: "BERNABÉ HUANCA CHOQUEHUANCA",
+  anio: 2020,
+  institucion: "UMSA – Facultad de Ciencias Económicas y Financieras - Carrera de Contaduría Pública (Maestría en Auditoría y Control Financiero)",
+  dominio: "Seguridad de la Información, Gestión de Riesgos, Auditoría, Cumplimiento Normativo, Gobierno de TI",
+  tags: ["seguridad", "gestion de riesgos", "iso27001", "auditoria", "cumplimiento", "sgsii"],
+  capaOSI: "Capa 7 – Aplicación (Políticas de seguridad, gestión de accesos, controles administrativos), Capa de Gestión (Gobierno de TI, COBIT, ISO 27001)",
+  herramientas: [
+    "ISO/IEC 27001:2013",
+    "ISO/IEC 27002:2013",
+    "COBIT 5",
+    "Modelo de Madurez de la Capacidad (CMM)",
+    "Ciclo PDCA (Planificar-Hacer-Verificar-Actuar)",
+    "Análisis de Riesgos (MCD/MVE)",
+    "Criterio de Riesgo Elemental (Binario, Multi-nivel, Variable Normalizada)",
+    "Encuestas y Cuestionarios",
+    "Entrevistas estructuradas",
+    "Análisis estadístico",
+    "Matriz de Confusión para evaluación de cumplimiento",
+    "Declaración de Aplicabilidad (SoA)",
+    "SEGIP - Servicio General de Identificación Personal"
+  ],
+  repositorio: "https://repositorio.umsa.bo",
+  pdf: "tesis/tesis umsa/tesis-06.pdf",
+  resumen: "Desarrolla un modelo de gestión y control integral de riesgos de seguridad de la información para la Administración Pública boliviana, fundamentado en los estándares internacionales ISO/IEC 27001:2013 (requisitos para SGSI) e ISO/IEC 27002:2013 (controles y buenas prácticas), así como en COBIT 5 para el gobierno de TI. El modelo propone cinco fases principales: (1) Planificación y programación de evaluación, (2) Diagnóstico de la situación actual y evaluación de riesgos, (3) Análisis de resultados, (4) Implementación del modelo, y (5) Auditoría de cumplimiento con nivel de madurez CMM. Se aplicó el modelo en el Servicio General de Identificación Personal (SEGIP) como caso de estudio real, evaluando 14 dominios, 35 objetivos de control y 110 controles aplicables. Mediante encuestas y entrevistas a 44 funcionarios de la Dirección Nacional de Tecnologías de la Información (DNTICs), se determinó un nivel inicial de seguridad satisfactorio del 86.64% con un riesgo del 13.36%. Posterior a la implementación del modelo, el nivel de riesgo controlado aumentó al 95.50%, logrando una minimización del riesgo del 8.86%. La auditoría de cumplimiento final arrojó un nivel de madurez CMM Gestionado y Medible (C4) con un cumplimiento global del 95.35%. El modelo demuestra que la implementación de controles basados en ISO 27001 reduce significativamente los riesgos de seguridad de la información en entidades públicas, mejorando la confidencialidad, integridad y disponibilidad de los datos.",
+  fuente: "Repositorio UMSA – Tesis de Maestría"
+  },
+
+  /* ─── OTRAS INSTITUCIONES ─── */
+  {
+  id: 7,
+  tipo: "ext"/*"UPEA"*/,
+  titulo: "COLLARES DE GEOLOCALIZACIÓN Y RASTREO DE ANIMALES DOMESTICOS EN BASE A TECNOLOGIA IOT",
+  autor: "JHOSEF ABIGAEL CORIZA MENDOZA",
+  anio: 2023,
+  institucion: "Universidad Pública de El Alto – Carrera Ingeniería de Sistemas",
+  dominio: "Internet de las Cosas (IoT), Sistemas de Información Geográfica (SIG), Geolocalización, Rastreo Satelital, Hardware Embebido",
+  tags: ["iot", "geolocalizacion", "gps", "rastreo", "mascotas", "arduino", "sig"],
+  capaOSI: "Capa 1 – Física (GPS, GSM, Arduino Nano), Capa 2 – Enlace de Datos (MQTT), Capa 3 – Red (IP/TCP), Capa 7 – Aplicación (PHP, Web, PostgreSQL/PostGIS)",
+  herramientas: [
+    "Arduino Nano (ATmega328P)",
+    "Módulo GSM/GPRS A9G (QUECTEL MC20)",
+    "Módulo GPS",
+    "Sensor de geolocalización",
+    "Tecnología IoT",
+    "Sistema de Posicionamiento Global (GPS)",
+    "Red GSM (2G)",
+    "MQTT (Mosquito - protocolo de comunicación)",
+    "PHP",
+    "CodeIgniter (Framework MVC)",
+    "PostgreSQL",
+    "PostGIS (extensión espacial)",
+    "QGIS (Sistema de Información Geográfica)",
+    "Apache",
+    "OGC (Open Geospatial Consortium)",
+    "Metodología UWE (UML-based Web Engineering)",
+    "ISO/IEC 25000 (SQuaRE)",
+    "Prueba T-Student"
+  ],
+  repositorio: "https://repositorio.upea.bo",
+  pdf: "tesis/tesis otros/tesis-07.pdf",
+  resumen: "Diseña e implementa un collar de geolocalización y rastreo para animales domésticos basado en tecnología IoT, orientado a reducir la pérdida, extravío y robo de mascotas en la Ciudad de El Alto. El prototipo utiliza un Arduino Nano como unidad de control, un módulo A9G con GPS integrado para obtener coordenadas satelitales y conectividad GSM para transmitir los datos mediante comandos AT, y un chip de telefonía Entel con mejor cobertura en la zona. El sistema incluye una base de datos espacial PostgreSQL con extensión PostGIS y un SIG desarrollado en QGIS, complementado con una aplicación web en PHP/CodeIgniter que permite a los propietarios registrar a sus mascotas, visualizar en tiempo real su ubicación en mapas, consultar el historial de recorridos por fechas, y generar reportes de coordenadas. Se realizaron 30 pruebas de campo del collar, obteniendo 25 conexiones exitosas (83.33% de eficacia). La prueba de hipótesis T-Student (t=6.26 > 2.776) valida la hipótesis alternativa con un nivel de confianza del 95%. La evaluación de calidad bajo ISO 25000 arrojó un 87.7% global, superando el umbral del 60% para software eficiente. El análisis costo-beneficio (B/C > 1) demuestra que la inversión en el collar (Bs 325 por unidad) es rentable frente a las gratificaciones promedio (Bs 1300) que ofrecen los propietarios por recuperar sus mascotas extraviadas.",
+  fuente: "Repositorio Universidad Pública de El Alto – Tesis de Grado"
+},
+  {
+  id: 8,
+  tipo: "ext"/*"UTP"*/,
+  titulo: "Implementación de un sistema honeypot con T-Pot para la detección temprana de amenazas en empresas con infraestructura en la nube",
+  autor: "Samgard Watson Lizano Murrieta",
+  anio: 2025,
+  institucion: "Facultad de Ingeniería – Carrera de Ingeniería de Redes y Comunicaciones, Universidad de Ingeniería y Tecnología (Perú)",
+  dominio: "Ciberseguridad, Honeypots, Seguridad en la Nube, Detección de Amenazas, Inteligencia de Amenazas",
+  tags: ["seguridad", "honeypot", "t-pot", "nube", "deteccion de amenazas", "ciberseguridad", "docker"],
+  capaOSI: "Capa 1 – Física (Infraestructura VPS), Capa 2 – Enlace de Datos (SSH, Telnet), Capa 3 – Red (IP, Firewall), Capa 4 – Transporte (TCP/UDP, puertos), Capa 5 – Sesión, Capa 7 – Aplicación (HTTP, SMTP, servicios simulados)",
+  herramientas: [
+    "T-Pot (Telekom Security)",
+    "Docker / Docker Compose",
+    "Debian 12",
+    "VPS (Contabo)",
+    "Cowrie (SSH/Telnet honeypot)",
+    "Dionaea (malware honeypot)",
+    "SentryPeer (SIP honeypot)",
+    "Heralding (authentication honeypot)",
+    "Mailoney (SMTP honeypot)",
+    "Adbhoney (ADB honeypot)",
+    "CiscoASA (Cisco honeypot)",
+    "ConPot (ICS/SCADA honeypot)",
+    "Tanner/Snare (web honeypot)",
+    "H0neytr4p (HTTP honeypot)",
+    "Suricata (IDS)",
+    "ELK Stack (Elasticsearch, Logstash, Kibana)",
+    "CyberChef",
+    "Cockpit",
+    "Spiderfoot",
+    "Nmap, Metasploit (pruebas)",
+    "Metodología PHVA (Planificar-Hacer-Verificar-Actuar)",
+    "Análisis estadístico (prueba de rangos de Wilcoxon, Z, p-valor)"
+  ],
+  repositorio: "https://repositorio.uit.edu.pe",
+  pdf: "tesis/tesis otros/tesis-08.pdf",
+  resumen: "Implementa y evalúa un sistema honeypot con T-Pot (plataforma de honeypots multi-sensor de Deutsche Telekom) para mejorar la detección temprana de amenazas en empresas con infraestructura en la nube. El estudio, de enfoque cuantitativo y diseño preexperimental con pretest y postest, desplegó T-Pot en un VPS de Contabo (6 vCPU, 12 GB RAM, 250 GB SSD, Debian 12) durante un período de 30 días. Se activaron múltiples sensores Dockerizados (Cowrie, Dionaea, SentryPeer, Heralding, Mailoney, Adbhoney, CiscoASA, ConPot, Tanner, H0neytr4p, Suricata) emulando servicios vulnerables (SSH, Telnet, SMB, FTP, HTTP, SMTP, SIP, ICS/SCADA, ADB, Cisco). La metodología PHVA (Planificar-Hacer-Verificar-Actuar) guió la implementación, configuraciones de firewall y refinamiento de filtros Kibana Query Language (KBL). Los resultados demostraron mejoras significativas en los 6 indicadores evaluados: detección de ataques (Z=-4.782, p<0.001), distribución de ataques (p=0.000), cantidad de tipos de ataques (Z=-3.088, p<0.002), tasa de detección de amenazas (Z=-3.088, p<0.002), ataques por dirección IP (Z=-4.782, p<0.001) e IPs maliciosas detectadas (Z=-3.332, p=0.001), aceptando todas las hipótesis alternas. El estudio confirma que T-Pot funciona como un sistema de alerta temprana, proporcionando visibilidad de amenazas (más de 1 millón de eventos), clasificación de vectores de ataque (SSH, HTTP, Telnet, malware) e identificación de IPs maliciosas para fortalecer la postura de seguridad en entornos cloud empresariales.",
+  fuente: "Repositorio Universidad de Ingeniería y Tecnología (Perú) – Tesis Profesional"
+  },
+
+  {
+  id: 9,
+  tipo: "ext"/*"UPEA"*/,
+  titulo: "MODELO DE GESTIÓN EMPRESARIAL ORIENTADO A VWISP UTILIZANDO HARDWARE LIBRE (MIKROTIK)",
+  autor: "GREGORIO MAMANI RAMOZ",
+  anio: 2023,
+  institucion: "Universidad Pública de El Alto – Dirección de Postgrado - Centro de Estudios de Formación y Postgrado e Investigación (CEFORPI)",
+  dominio: "Redes Inalámbricas, WISP (Wireless Internet Service Provider), Gestión Empresarial, Hardware Libre, Telecomunicaciones",
+  tags: ["wisp", "mikrotik", "redes", "hardware libre", "routerboard", "gestion empresarial", "inalambrico"],
+  capaOSI: "Capa 1 – Física (antenas, torres, radiofrecuencia, PoE), Capa 2 – Enlace de Datos (Ethernet, WLAN, 802.11x), Capa 3 – Red (IP, enrutamiento), Capa 7 – Aplicación (Winbox, gestión)",
+  herramientas: [
+    "MikroTik RouterBoard",
+    "RouterOS",
+    "Winbox",
+    "Protocolo 802.11x",
+    "Antenas direccionales y omnidireccionales",
+    "Torres de telecomunicaciones",
+    "PoE (Power over Ethernet)",
+    "Ethernet",
+    "LAN/WLAN",
+    "Metodología QFD (Quality Function Deployment)",
+    "Modelo PHVA (Planificar-Hacer-Verificar-Actuar)"
+  ],
+  repositorio: "https://repositorio.upea.bo",
+  pdf: "tesis/tesis otros/tesis-09.pdf",
+  resumen: "Propone un modelo de gestión empresarial orientado a WISP (Wireless Internet Service Provider) utilizando hardware libre de MikroTik (RouterBoard) para proveer servicio de internet en zonas no alcanzadas por la red ISP tradicional de fibra óptica o cobre. El modelo abarca aspectos técnicos (infraestructura lógica y física con antenas, torres, radiofrecuencia 802.11x, PoE), legales y procedimentales, así como una etapa de retroalimentación mediante la metodología QFD (Quality Function Deployment) que genera un bucle de aprendizaje para mejorar la calidad del servicio al cliente. La infraestructura planteada requiere un nodo base con al menos capacidad para 10 clientes, con costos significativamente menores que una infraestructura cableada tradicional. El modelo está diseñado para ser replicable por emprendedores que deseen ofrecer servicios de internet inalámbrico en áreas rurales o periurbanas de difícil acceso, con una proyección de solvencia económica a mediano plazo basada en los pagos mensuales de los suscriptores.",
+  fuente: "Repositorio Universidad Pública de El Alto – Tesis de Posgrado"
+  },
+
+  {
+  id: "ext"/*10*/,
+  tipo: "UTB",
+  titulo: "Optimización de la Infraestructura Red y Estandarización del Cableado Estructurado en Salas de Telecomunicaciones de la Empresa Estatal de Transporte por Cable Mi Teleférico Caso: 'Oficinas Administrativas y Estación Libertador'",
+  autor: "YHOVANI CUTILE QUISPE",
+  anio: 2025,
+  institucion: "Universidad Tecnológica Boliviana – Ingeniería de Sistemas",
+  dominio: "Redes de Telecomunicaciones, Cableado Estructurado, Segmentación de Redes, VLANs, Gestión de Infraestructura TI",
+  tags: ["redes", "cableado estructurado", "vlans", "optimizacion", "telecomunicaciones", "switches", "etiquetado"],
+  capaOSI: "Capa 1 – Física (cableado UTP, fibra óptica, racks, conectores RJ-45, PoE), Capa 2 – Enlace de Datos (Ethernet, VLANs, switches, direcciones MAC), Capa 3 – Red (IP, subredes, routing)",
+  herramientas: [
+    "Switches HP 5130",
+    "Switches DELL N2048P (PoE+)",
+    "Switches Cisco",
+    "PuTTY (acceso SSH)",
+    "Tester de red Fluke Networks",
+    "VFL (Visual Fault Locator)",
+    "Ping, Tracert, Speedtest",
+    "ANSI/TIA-568 (cableado estructurado)",
+    "ANSI/TIA-606 (etiquetado)",
+    "IEEE 802.1Q (VLANs)",
+    "Metodología Scrum + PDCA (Planificar-Hacer-Verificar-Actuar)",
+    "Diagramas de red (físicos y lógicos)",
+    "Etiquetado industrial (norma UL969)"
+  ],
+  repositorio: "https://repositorio.utb.edu.bo",
+  pdf: "tesis/tesis otros/tesis-10.pdf",
+  resumen: "Optimiza y estandariza la infraestructura de red y cableado estructurado en las salas de telecomunicaciones de Mi Teleférico, específicamente en las Oficinas Administrativas (EV1) y la Estación Libertador (líneas Amarilla y Verde). El proyecto, desarrollado bajo una metodología híbrida Scrum + PDCA (Planificar-Hacer-Verificar-Actuar) organizada en 4 sprints, incluyó: relevamiento de equipos y segmentación de red, actualización de firmware de switches (HP 5130 y DELL N2048P), configuración de VLANs bajo IEEE 802.1Q, migración por bloques (Rojo, Amarillo, Verde), peinado y organización de racks según estándares ANSI/TIA-568, etiquetado de cables y puertos bajo ANSI/TIA-606, y pruebas de conectividad (ping, tracert, speedtest). Se aplicaron encuestas al personal de TI y administrativo (muestra de 63 personas, 95% confianza) que revelaron que el 80% de los usuarios sufría interrupciones de red que afectaban su productividad. Post-implementación, se logró una reducción significativa de la latencia (ej. ping a DNS Google mejoró de 128ms a menor tiempo), descongestión de racks, mejora en la disipación térmica y ventilación, y una red segmentada y escalable. El proyecto fue certificado exitosamente por Mi Teleférico, demostrando que la aplicación de estándares internacionales y buenas prácticas de cableado estructurado mejora el rendimiento, confiabilidad y mantenibilidad de la infraestructura de red corporativa.",
+  fuente: "Repositorio Universidad Tecnológica Boliviana – Trabajo Dirigido"
+  },
+
+  {
+  id: 11,
+  tipo: "ext"/*"EPN"*/,
+  titulo: "Planificación y Optimización de una red 5G en las bandas 3.5/28 GHz para un operador local en el área metropolitana del sector Iñaquito de la ciudad de Quito",
+  autor: "VALDEMAR RAMÓN FARRÉ GUIJARRO",
+  anio: 2024,
+  institucion: "Escuela Politécnica Nacional (Ecuador) – Departamento de Electrónica, Telecomunicaciones y Redes de Información – Maestría en Telecomunicaciones, Mención Comunicaciones",
+  dominio: "Telecomunicaciones, Redes 5G, Planificación Radioeléctrica, Optimización de Redes, Comunicaciones Inalámbricas",
+  tags: ["5g", "telecomunicaciones", "planificacion", "optimizacion", "nr", "3gpp", "banda c", "mmwave"],
+  capaOSI: "Capa 1 – Física (propagación, antenas mMIMO, beamforming, numerología 5G NR), Capa 2 – Enlace de Datos (PRACH, PDSCH, PUSCH, MAC), Capa 3 – Red (5G NR, RRC, movilidad)",
+  herramientas: [
+    "5G New Radio (3GPP Release 15/16/17)",
+    "Atoll 3.4.0 (software de planificación radioeléctrica)",
+    "Winprop 2021 (software de planificación radioeléctrica)",
+    "Modelos de propagación 3GPP (TS 38.901 - UMa/UMi)",
+    "Modelo de propagación Aster (Ray Tracing)",
+    "Modelo de propagación DPM (Dominant Path Model)",
+    "Mapas digitales 2D/3D (resolución 2-5m)",
+    "mMIMO (massive MIMO)",
+    "Beamforming (BF)",
+    "Huawei AAU 5636m (n78, 64T64R)",
+    "Huawei HAAU 5323 (n257, 8T8R)",
+    "Link Budget (Excel)",
+    "Método de optimización ACP (Automatic Cell Planning)",
+    "EN-DC (EUTRAN-NR Dual Connectivity)",
+    "DSS (Dynamic Spectrum Sharing)",
+    "Análisis de KPIs (RSRP, SINR, Throughput)"
+  ],
+  repositorio: "https://repositorio.epn.edu.ec",
+  pdf: "tesis/tesis otros/tesis-11.pdf",
+  resumen: "Planifica y optimiza una red 5G NR (New Radio) en arquitectura NSA (Non-Stand Alone) para el área metropolitana del sector Iñaquito en Quito (6.72 km²), utilizando las bandas de frecuencia n78 (3.5 GHz, banda C) y n257 (28 GHz, mmWave). El trabajo desarrolla una metodología completa que incluye: recolección de información del operador local CNT (tráfico 4G, sitios existentes, espectro disponible), dimensionamiento mediante link budget y capacidad (uso de modelos 3GPP UMa/UMi, cálculos de radio de celda, número de sitios, throughputs), selección de equipos (Huawei AAU 5636m para n78 con 64T64R, HAAU 5323 para n257 con 8T8R), planificación RF física (ubicación geográfica de 8 gnodesB para n78 y 116 para n257, alturas, azimuth, downtilts eléctricos/mecánicos), simulación en Atoll y Winprop con modelos de propagación 3GPP, Aster (Ray Tracing) y DPM (Dominant Path Model) usando mapas 3D, planificación de parámetros lógicos (PCI, RSI, vecindades intra/inter-frecuencia, potencias, Time Slots 8:2 para n78 y 4:1 para n257, escenarios de cobertura para broadcast beams), y finalmente optimización mediante el módulo ACP de Atoll. Los resultados muestran niveles de cobertura SS-RSRP superiores a -92 dBm, calidad SS-SINR superior a 3.5 dB, throughput promedio por usuario superior a 285 Mbps y pico de 1.26 Gbps en DL, con mejoras en la optimización del 6.55% en cobertura y 10.19% en calidad para banda n78, y 2.47%/22.54% para banda n257. Se concluye que la metodología propuesta supera significativamente el desempeño de la red 4G existente, cumpliendo con los requerimientos del estándar IMT-2020 para eMBB (enhanced Mobile Broadband).",
+  fuente: "Repositorio Escuela Politécnica Nacional – Tesis de Maestría"
+  },
+
+  {
+  id: 12,
+  tipo: "ext"/*"UMSA"*/,
+  titulo: "APLICACIÓN DEL INTERNET DE LAS COSAS (IOT) A LAS INSTALACIONES ELÉCTRICAS RESIDENCIALES",
+  autor: "JUAN CARLOS APAZA QUIJHUA",
+  anio: 2022,
+  institucion: "Universidad Mayor de San Andrés – Facultad de Tecnología - Carrera de Electricidad Industrial",
+  dominio: "Domótica, Internet de las Cosas (IoT), Instalaciones Eléctricas Residenciales, Automatización de Viviendas",
+  tags: ["iot", "domotica", "esp8266", "instalaciones electricas", "automatizacion", "vivienda inteligente"],
+  capaOSI: "Capa 1 – Física (circuitos eléctricos, relés, triacs, MOC3021), Capa 2 – Enlace de Datos (WiFi 802.11 b/g/n), Capa 3 – Red (TCP/IP), Capa 7 – Aplicación (MQTT, HTTP, Adafruit IO, IFTTT)",
+  herramientas: [
+    "ESP8266 (NodeMCU / módulo ESP-01)",
+    "Arduino IDE",
+    "Lenguaje C/C++",
+    "Adafruit IO (plataforma IoT)",
+    "IFTTT (If This Then That)",
+    "Asistente de Google (comandos de voz)",
+    "MQTT (Message Queuing Telemetry Transport)",
+    "MOC3021 (optotriac)",
+    "Triac BT136",
+    "Relés",
+    "WiFi IEEE 802.11 b/g/n",
+    "Android (dispositivo móvil)",
+    "Shields (para ESP8266)"
+  ],
+  repositorio: "https://repositorio.umsa.bo",
+  pdf: "tesis/tesis otros/tesis-12.pdf",
+  resumen: "Aplica el Internet de las Cosas (IoT) a instalaciones eléctricas residenciales mediante el módulo WiFi ESP8266, las plataformas Adafruit IO e IFTTT, y comandos de voz con Google Assistant, permitiendo el control remoto y automatización de cargas eléctricas desde cualquier lugar con acceso a internet. El trabajo implementa un prototipo domótico para una vivienda, controlando hasta 6 circuitos de carga (iluminación, electrodomésticos, puerta de garaje, etc.) a través de una interfaz web en Adafruit IO y por comandos de voz mediante IFTTT. Se desarrolló la programación en Arduino IDE utilizando el protocolo MQTT para la comunicación con Adafruit, y se configuraron Applets en IFTTT para enlazar el Asistente de Google con los feeds de Adafruit. El circuito de potencia emplea optotriacs MOC3021 y triacs BT136 para el control de cargas de corriente alterna (220V). El sistema permite control manual vía internet y control por voz (encendido/apagado) para dos de las cargas, demostrando la viabilidad de implementar domótica de bajo costo utilizando hardware libre (ESP8266) y plataformas gratuitas (Adafruit IO). El costo total de los materiales fue de Bs 1,352 (excluyendo suscripciones mensuales de Adafruit e IFTTT para escalamiento). El trabajo concluye que el IoT facilita la operación y control de cargas eléctricas residenciales, mejorando la comodidad, seguridad y eficiencia energética del hogar.",
+  fuente: "Repositorio UMSA – Trabajo de Aplicación (Electricidad Industrial)"
+}
+];
+
+/* ═══════════════════════════
+   DATOS DEL REPORTE
+   ▶ PERSONALIZA con tu análisis real
+   ═══════════════════════════ */
+const REPORTE = {
+  densidad: [
+    { label: "IoT / Sensores / Domótica", valor: 75 },      // 6 tesis (1,5,7,9?,12) + aplicaciones industriales
+    { label: "Redes / Telecomunicaciones", valor: 80 },     // 5 tesis (2,3,8,10,11) SDN,5G,WISP,optimización
+    { label: "Seguridad Informática", valor: 60 },          // 4 tesis (4,6,8) malware, honeypot, SGSI
+    { label: "SDN / OpenFlow / Virtualización", valor: 55 }, // 2 tesis (2,3) + mención en honeypot
+    { label: "Gestión Empresarial / Calidad", valor: 40 },   // 2 tesis (9,6) WISP + ISO27001
+    { label: "Geolocalización / SIG", valor: 35 },          // 2 tesis (7,7) mascotas + especies? + georreferenciación
+    { label: "Optimización de Infraestructura", valor: 30 }, // 2 tesis (10,10) cableado + 5G
+    { label: "Machine Learning / IA", valor: 20 },          // 1 tesis (4) detección malware
+  ],
+  obsolescencia: `De las 12 tesis analizadas (2019-2025), se identifican tendencias y brechas tecnológicas:<br><br>
+
+ <strong>• Herramientas de simulación obsoletas:</strong> Cisco Packet Tracer y GNS3 (tesis SDN 2019) son educativas; para validación de producción real se requieren entornos como EVE-NG, PNETLab o despliegues en hardware real.<br><br>
+
+ <strong>• Protocolos propietarios vs estándares abiertos:</strong> EIGRP y H.323 aparecen en trabajos (UMSA 2020-2022), mientras el mercado ya migró a SIP, SD-WAN y segmentación Zero Trust.<br><br>
+
+ <strong>• Monitoreo tradicional:</strong> Nagios/Zabbix usados exclusivamente; ausencia de stacks modernos como Prometheus + Grafana + Loki + Tempo.<br><br>
+
+ <strong>• Tecnologías emergentes ausentes:</strong> 5G privado (solo 1 tesis en Ecuador, ninguna en Bolivia), NFV, Network Slicing, Zero Trust Architecture, ML predictivo para telemetría, SOAR (Security Orchestration, Automation and Response).<br><br>
+
+ <strong>• IoT/Domótica fragmentada:</strong> múltiples proyectos (ESP8266, Arduino, sensores) pero sin integración con estándares como MQTT Sparkplug, Edge Computing o integración con IA local (TinyML).<br><br>
+
+ <strong>• Hardware libre y WISP:</strong> solo 1 tesis aborda MikroTik/WISP, pese a ser solución real para zonas rurales del altiplano.`,
+
+brecha: `Ausencia total de investigaciones en:<br><br>
+
+1. Redes 5G privadas para sectores productivos bolivianos (minería, agroindustria, manufactura). Solo 1 tesis en Ecuador, ninguna en Bolivia o Perú.<br><br>
+
+2. Arquitectura Zero Trust para entornos gubernamentales y universitarios (segmentación granular, microsegmentación, autenticación continua).<br><br>
+
+3. Telemetría en tiempo real con ML predictivo aplicado a redes ISP locales (predicción de fallos, análisis de tráfico).<br><br>
+
+4. Network Slicing y NFV aplicados a ISPs nacionales (Entel, Tigo, Viva, COTAS, cooperativas telefónicas).<br><br>
+
+5. Ciberseguridad de infraestructuras críticas (SCADA/OT) para sectores eléctricos, hidrocarburos y agua potable (EMAPA, ENDE, YPFB).<br><br>
+
+6. Integración de IoT con Edge AI / TinyML para mantenimiento predictivo en industrias locales.<br><br>
+
+7. Estándares de cableado estructurado y certificación formal en entornos empresariales (solo 1 tesis en Mi Teleférico).<br><br>
+
+8. Análisis de brecha de género en carreras STEM y adopción tecnológica (ninguna tesis aborda este aspecto a pesar de ser relevante para políticas públicas).<br><br>
+
+9. Implementación real de SGSI ISO 27001 en entidades públicas (la tesis de maestría es teórica, no implementada certificablemente).<br><br>
+
+10. Rastreo satelital y SIG para gestión de fauna urbana/rural (solo hay 1 tesis de collar de mascotas, pero no para conservación de especies nativas en riesgo).`,
+   propuestas: [
+    {
+      titulo: "Sistema de Detección y Respuesta Autónoma a Incidentes en Redes Universitarias mediante Inteligencia Artificial y Arquitectura Zero Trust",
+      justificacion: `Brecha clara: ninguna tesis UMSA/UPEA/UTB aborda Zero Trust + respuesta autónoma (SOAR). Alta demanda en sector público boliviano (Ministerios, entidades descentralizadas, universidades).`,
+      linea_base: `Las tesis existentes en seguridad (4 y 6) usan enfoques tradicionales: ML supervisado no supervisado para malware y SGSI ISO 27001 teórico sin automatización SOAR.`,
+      impacto: `Implementable en universidades públicas como modelo replicable al Estado Plurinacional.`
+    },
+    {
+      titulo: "Diseño e Implementación de una Red 5G Privada para Conectividad Rural en el Altiplano Boliviano usando Software Open Source (Open5GS + srsRAN + UERANSIM)",
+      justificacion: `Brecha geográfica y tecnológica: 5G privado completamente ausente en repositorios bolivianos. La única tesis 5G es de Quito (Escuela Politécnica Nacional). Oportunidad única de impacto social en comunidades rurales, cooperativas mineras y agroindustria.`,
+      linea_base: `En Bolivia solo hay estudios de espectro y regulación (CNT Ecuador avanzó). No existe prototipo funcional 5G implementado en Bolivia.`,
+      impacto: `Conectividad rural de banda ancha, reducción de brecha digital, aplicaciones en telemedicina y educación rural.`
+    },
+    {
+      titulo: "Implementación de un Sistema de Telemetría Predictiva para ISP Locales usando Prometheus, Grafana y Machine Learning",
+      justificacion: `Brecha de monitoreo: todas las tesis usan Nagios/Zabbix/Herramientas básicas. No existe implementación de stack moderno Prometheus+Grafana+ML predictivo en repositorios nacionales.`,
+      linea_base: `Empresas ISP locales (Entel, Tigo, Viva, COTAS, cooperativas) requieren monitoreo avanzado. La tesis sobre WISP (id:9) no cubre telemetría predictiva.`,
+      impacto: `Reducción de caídas, mejora de SLA, mantenimiento predictivo en infraestructura crítica de telecomunicaciones.`
+    },
+    {
+      titulo: "Diseño y Certificación de Infraestructura de Cableado Estructurado bajo Estándares ANSI/TIA para Edificios Gubernamentales: Caso de Estudio en un Ministerio del Estado Plurinacional",
+      justificacion: `Brecha de estandarización: solo 1 tesis (Mi Teleférico, id:10) abordó cableado estructurado pero en una empresa específica sin replicación en otras entidades públicas.`,
+      linea_base: `La mayoría de ministerios y gobernaciones carecen de certificación ANSI/TIA, lo que afecta rendimiento de red y seguridad.`,
+      impacto: `Estandarización nacional, mejora de rendimiento, reducción de costos de mantenimiento y escalabilidad.`
+    }
+  ]
+};
+
+/* ═══════════════════════════
+   RENDERIZADO
+   ═══════════════════════════ */
+function renderCards(data) {
+  const grid = document.getElementById('thesis-grid');
+  grid.innerHTML = '';
+  data.forEach(t => {
+    const accent = t.tipo === 'umsa' ? 'card-accent-umsa' : 'card-accent-ext';
+    const badge = t.tipo === 'umsa'
+      ? `<span class="badge badge-umsa">UMSA</span>`
+      : `<span class="badge badge-ext">Institución externa</span>`;
+    grid.innerHTML += `
+      <div class="thesis-card ${accent}" data-tags="${t.tags.join(',')}" data-tipo="${t.tipo}" data-id="${t.id}">
+        <div class="card-header">
+          <div class="card-badges">
+            ${badge}
+            <span class="badge badge-year">${t.anio}</span>
+          </div>
+          <span class="card-num">#${String(t.id).padStart(2,'0')}</span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">${t.titulo}</div>
+          <div class="card-author">${t.autor}</div>
+          <div class="card-domain">⬡ ${t.dominio}</div>
+        </div>
+        <div class="card-meta">
+          <div class="meta-item">
+            <span class="meta-label">Institución</span>
+            <span class="meta-val">${t.institucion.split('–')[0].trim()}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Capa OSI</span>
+            <span class="meta-val">${t.capaOSI.split('/')[0].trim()}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Herramientas</span>
+            <span class="meta-val">${t.herramientas.slice(0,2).join(', ')}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Fuente</span>
+            <span class="meta-val">${t.fuente}</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="btn-detail" onclick="openModal(${t.id})"> Ver detalles</button>
+          <button class="btn-download" onclick="downloadTesis(${t.id})">⬇ Descargar</button>
+        </div>
+      </div>`;
+  });
+}
+
+function renderMatrix() {
+  const tbody = document.getElementById('matrix-body');
+  TESIS.forEach(t => {
+    const badge = t.tipo === 'umsa'
+      ? `<span class="badge badge-umsa">UMSA</span>`
+      : `<span class="badge badge-ext">Externa</span>`;
+    tbody.innerHTML += `
+      <tr>
+        <td>${badge}<br><small style="color:var(--muted)">#${t.id}</small></td>
+        <td>
+          <div class="td-title">${t.titulo}</div>
+          <div class="td-author">${t.autor} · ${t.anio}</div>
+        </td>
+        <td style="color:var(--muted);font-size:0.78rem;max-width:160px">${t.institucion}</td>
+        <td><span class="domain-chip">${t.dominio}</span></td>
+        <td><span class="osi-chip">${t.capaOSI}</span></td>
+        <td style="color:var(--muted);font-size:0.78rem">${t.herramientas.join(' · ')}</td>
+      </tr>`;
+  });
+}
+
+function renderReporte() {
+  // Densidad
+  const chart = document.getElementById('density-chart');
+  REPORTE.densidad.forEach(d => {
+    chart.innerHTML += `
+      <div class="bar-row">
+        <div class="bar-label"><span>${d.label}</span><span>${d.valor}%</span></div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:${d.valor}%; background: linear-gradient(90deg, var(--accent), var(--accent2))"></div>
+        </div>
+      </div>`;
+  });
+
+  document.getElementById('obsolescence-text').innerHTML = REPORTE.obsolescencia;
+  document.getElementById('gap-text').innerHTML = REPORTE.brecha;
+
+  const pl = document.getElementById('proposal-list');
+  REPORTE.propuestas.forEach((p, i) => {
+    pl.innerHTML += `
+      <li>
+        <span class="proposal-num">P${i+1}</span>
+        <div>
+          <div class="proposal-text" style="font-weight:600;margin-bottom:4px">${p.titulo}</div>
+          <div class="proposal-text" style="color:var(--muted)">${p.justificacion}</div>
+        </div>
+      </li>`;
+  });
+}
+
+/* ── FILTROS ── */
+function filterCards(filter, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const cards = document.querySelectorAll('.thesis-card');
+  cards.forEach(c => {
+    const tags = c.dataset.tags;
+    const tipo = c.dataset.tipo;
+    if (filter === 'all') { c.classList.remove('hidden'); return; }
+    if (filter === 'umsa' || filter === 'ext') {
+      c.classList.toggle('hidden', tipo !== filter);
+    } else {
+      c.classList.toggle('hidden', !tags.includes(filter));
+    }
+  });
+}
+
+/* ── MODAL ── */
+function openModal(id) {
+  const t = TESIS.find(x => x.id === id);
+  const overlay = document.getElementById('modal');
+  const badge = t.tipo === 'umsa'
+    ? `<span class="badge badge-umsa">UMSA</span>`
+    : `<span class="badge badge-ext">Institución externa</span>`;
+  document.getElementById('modal-badges').innerHTML = badge + `<span class="badge badge-year">${t.anio}</span>`;
+  document.getElementById('modal-title').textContent = t.titulo;
+  document.getElementById('modal-author').textContent = `${t.autor} · ${t.institucion}`;
+  document.getElementById('modal-fields').innerHTML = `
+    <div class="modal-field"><div class="modal-field-label">Dominio Tecnológico</div><div class="modal-field-val">${t.dominio}</div></div>
+    <div class="modal-field"><div class="modal-field-label">Año de defensa</div><div class="modal-field-val">${t.anio}</div></div>
+    <div class="modal-field"><div class="modal-field-label">Capa OSI / TCP-IP</div><div class="modal-field-val">${t.capaOSI}</div></div>
+    <div class="modal-field"><div class="modal-field-label">Fuente / Repositorio</div><div class="modal-field-val">${t.fuente}</div></div>`;
+  document.getElementById('modal-abstract').textContent = t.resumen;
+  document.getElementById('modal-tools').innerHTML = t.herramientas.map(h => `<span class="tool-chip">${h}</span>`).join('');
+  document.getElementById('modal-dl-btn').onclick = () => downloadTesis(id);
+ /* document.getElementById('modal-repo-btn').onclick = () => window.open(t.repositorio, '_blank');*/
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e.target.id === 'modal') closeModalDirect();
+}
+function closeModalDirect() {
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function downloadTesis(id) {
+  const t = TESIS.find(x => x.id === id);
+  const a = document.createElement('a');
+  a.href = t.pdf;
+  a.download = `tesis-${String(id).padStart(2,'0')}.pdf`;
+  a.click();
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalDirect(); });
+
+/* ── INIT ── */
+renderCards(TESIS);
+renderMatrix();
+renderReporte();
+</script>
+</body>
+</html>
